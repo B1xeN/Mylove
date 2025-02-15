@@ -65,30 +65,35 @@
             border-radius: 50%;
             object-fit: cover;
         }
-        h1 {
-            color: #ffffff;
-            font-size: 2.5em;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+        .hearts {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
         }
-        p {
-            font-size: 22px;
-            color: #fff;
-            font-weight: bold;
-            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            transform: rotate(-45deg);
+            animation: fall 5s linear infinite;
         }
-        .play-button {
-            background: linear-gradient(135deg, #ff4e50, #ff7873);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 20px;
-            cursor: pointer;
-            border-radius: 12px;
-            margin-top: 20px;
-            transition: transform 0.2s;
+        .heart::before, .heart::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: inherit;
+            border-radius: 50%;
         }
-        .play-button:hover {
-            transform: scale(1.1);
+        .heart::before { top: -10px; left: 0; }
+        .heart::after { top: 0; left: 10px; }
+        @keyframes fall {
+            from { transform: translateY(-100px) rotate(-45deg); opacity: 1; }
+            to { transform: translateY(100vh) rotate(-45deg); opacity: 0; }
         }
     </style>
 </head>
@@ -105,8 +110,9 @@
         <button class="play-button" onclick="playMusic()">💗 เล่นเพลง 💗</button>
         <div id="youtube-player"></div>
     </div>
+    <div class="hearts"></div>
     <script>
-        let images = ["1.png", "2.png"];
+        let images = ["1.png", "2.png", "3.png"];
         let index = 0;
         function changeImage() {
             index = (index + 1) % images.length;
@@ -139,6 +145,19 @@
                 player.playVideo();
             }
         }
+
+        function createHeartsEffect() {
+            setInterval(() => {
+                const heart = document.createElement("div");
+                heart.classList.add("heart");
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.backgroundColor = ["#ff0000", "#ff69b4", "#00bfff", "#ffff00"][Math.floor(Math.random() * 4)];
+                heart.style.animationDuration = Math.random() * 3 + 2 + "s";
+                document.querySelector(".hearts").appendChild(heart);
+                setTimeout(() => heart.remove(), 5000);
+            }, 300);
+        }
+        createHeartsEffect();
     </script>
 </body>
 </html>
